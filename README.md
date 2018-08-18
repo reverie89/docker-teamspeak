@@ -1,9 +1,12 @@
 # Teamspeak server in a Docker image for x86/x64
 Repo forked from [pozgo's docker-teamspeak](https://github.com/pozgo/docker-teamspeak)
 
-Instead of using 3.0.13.8, this fork is modified to always use the latest version available from [Teamspeak website](https://www.teamspeak.com/downloads)
+This fork is modified to always use the latest version available from [Teamspeak website](https://www.teamspeak.com/downloads)
 
-Tested successfully on latest Alpine 3.7, teamspeak 3.1.1 (auto-updated to 3.1.8 on boot)
+
+Tested successfully on latest Alpine 3.8, teamspeak 3.3.0
+
+If ts3server.sqlitedb is not found in the mounted volume, the started container will attempt to download and install the latest Teamspeak server version available at https://www.teamspeak.com/downloads
 
 Docker image can also be pulled on [Docker Hub](https://hub.docker.com/r/reverie89/teamspeak/)
 
@@ -16,64 +19,41 @@ docker run -d \
   -p 10011:10011 \
   -p 30033:30033 \
   -v /opt/docker/teamspeak:/opt/teamspeak \
-  -e TS3SERVER_LICENSE=accept
   reverie89/teamspeak
 ```
 
 ## Server administrator access and ServerAdmin privilege key
-Admin login details can be found on first run in logs of running container. Make sure you save them. After restarting the container those details are not available anymore. See logs by typing `docker logs -f ts3`  
+Admin login details can be found on first run in logs of running container. It will only appear once, so make sure you save them! After restarting the container those details will not available anymore. See logs by typing `docker logs -f teamspeak`  
 
 Example output:  
 
 ```bash
-Installing Teamspeak version:
-Teamspeak version:  installed.
-2018-04-23 12:53:13.442803|INFO    |ServerLibPriv |   |TeamSpeak 3 Server 3.1.1 (2018-02-26 11:14:04)
-2018-04-23 12:53:13.443667|INFO    |ServerLibPriv |   |SystemInformation: Linux 4.4.0-119-generic #143-Ubuntu SMP Mon Apr 2 16:08:24 UTC 2018 x86_64 Binary: 64bit
-2018-04-23 12:53:13.443982|WARNING |ServerLibPriv |   |The system locale is set to "C" this can cause unexpected behavior. We advice you to repair your locale!
-2018-04-23 12:53:13.444359|INFO    |ServerLibPriv |   |Using hardware aes
-2018-04-23 12:53:13.446126|INFO    |DatabaseQuery |   |dbPlugin name:    SQLite3 plugin, Version 3, (c)TeamSpeak Systems GmbH
-2018-04-23 12:53:13.446509|INFO    |DatabaseQuery |   |dbPlugin version: 3.11.1
-2018-04-23 12:53:13.447311|INFO    |DatabaseQuery |   |checking database integrity (may take a while)
-2018-04-23 12:53:13.482496|INFO    |SQL           |   |db_CreateTables() tables created
-
-------------------------------------------------------------------
-                      I M P O R T A N T
-------------------------------------------------------------------
-               Server Query Admin Account created
-         loginname= "serveradmin", password= "rIF1JpHH"
-------------------------------------------------------------------
-
-2018-04-23 12:53:13.803817|WARNING |Accounting    |   |Unable to open licensekey.dat, falling back to limited functionality
-2018-04-23 12:53:13.804891|INFO    |Accounting    |   |Licensing Information
-2018-04-23 12:53:13.805194|INFO    |Accounting    |   |licensed to       : Anonymous
-2018-04-23 12:53:13.805497|INFO    |Accounting    |   |type              : No License
-2018-04-23 12:53:13.805817|INFO    |Accounting    |   |starting date     : Wed May 31 22:00:00 2017
-2018-04-23 12:53:13.806120|INFO    |Accounting    |   |ending date       : Fri Aug 31 22:00:00 2018
-2018-04-23 12:53:13.806417|INFO    |Accounting    |   |max virtualservers: 1
-2018-04-23 12:53:13.806965|INFO    |Accounting    |   |max slots         : 32
-2018-04-23 12:53:17.570585|INFO    |              |   |Puzzle precompute time: 3720
-2018-04-23 12:53:17.577376|INFO    |FileManager   |   |listening on 0.0.0.0:30033, [::]:30033
-2018-04-23 12:53:17.582353|INFO    |VirtualSvrMgr |   |executing monthly interval
-2018-04-23 12:53:17.587470|INFO    |VirtualSvrMgr |   |reset virtualserver traffic statistics
-
-------------------------------------------------------------------
-                      I M P O R T A N T
-------------------------------------------------------------------
-      ServerAdmin privilege key created, please use it to gain
-      serveradmin rights for your virtualserver. please
-      also check the doc/privilegekey_guide.txt for details.
-
-       token=RUduc+6xFZXGOQGulYYhUcR5PX+25TtevvY15TeY
-------------------------------------------------------------------
-
-2018-04-23 12:53:17.657711|INFO    |VirtualServer |1  |listening on 0.0.0.0:9987, [::]:9987
-2018-04-23 12:53:17.661402|WARNING |VirtualServer |1  |--------------------------------------------------------
-2018-04-23 12:53:17.662106|WARNING |VirtualServer |1  |ServerAdmin privilege key created, please use the line below
-2018-04-23 12:53:17.662181|WARNING |VirtualServer |1  |token=RUduc+6xFZXGOQGulYYhUcR5PX+25TtevvY15TeY
-2018-04-23 12:53:17.662239|WARNING |VirtualServer |1  |--------------------------------------------------------
-2018-04-23 12:53:17.663244|INFO    |CIDRManager   |   |updated query_ip_whitelist ips: 127.0.0.1/32, ::1/128,
-2018-04-23 12:53:17.664480|INFO    |Query         |   |listening on 0.0.0.0:10011, [::]:10011
+2018-08-14 14:39:54.578139|INFO    |ServerLibPriv |   |TeamSpeak 3 Server 3.3.0 (2018-07-31 16:10:01)
+2018-08-14 14:39:54.580070|INFO    |ServerLibPriv |   |SystemInformation: Linux 4.4.0-122-generic #146-Ubuntu SMP Mon Apr 23 15:34:04 UTC 2018 x86_64 Binary: 64bit
+2018-08-14 14:39:54.580134|WARNING |ServerLibPriv |   |The system locale is set to "C" this can cause unexpected behavior. We advice you to repair your locale!
+2018-08-14 14:39:54.580185|INFO    |ServerLibPriv |   |Using hardware aes
+2018-08-14 14:39:54.583158|INFO    |DatabaseQuery |   |dbPlugin name:    SQLite3 plugin, Version 3, (c)TeamSpeak Systems GmbH
+2018-08-14 14:39:54.583239|INFO    |DatabaseQuery |   |dbPlugin version: 3.11.1
+2018-08-14 14:39:54.586241|INFO    |DatabaseQuery |   |checking database integrity (may take a while)
+2018-08-14 14:39:54.625605|INFO    |SQL           |   |database updated successfully to revision: 28
+2018-08-14 14:39:54.630780|INFO    |SQL           |   |database updated successfully to revision: 29
+2018-08-14 14:39:54.633131|INFO    |DatabaseQuery |   |database busy, waiting for finishing index tasks, may take some time!
+2018-08-14 14:40:34.704436|WARNING |Accounting    |   |Unable to open licensekey.dat, falling back to limited functionality
+2018-08-14 14:40:34.716966|INFO    |Accounting    |   |Licensing Information
+2018-08-14 14:40:34.717075|INFO    |Accounting    |   |licensed to       : Anonymous
+2018-08-14 14:40:34.717138|INFO    |Accounting    |   |type              : No License
+2018-08-14 14:40:34.717215|INFO    |Accounting    |   |starting date     : Sun Jul  1 00:00:00 2018
+2018-08-14 14:40:34.717296|INFO    |Accounting    |   |ending date       : Wed Jul 31 00:00:00 2019
+2018-08-14 14:40:34.717340|INFO    |Accounting    |   |max virtualservers: 1
+2018-08-14 14:40:34.717378|INFO    |Accounting    |   |max slots         : 32
+2018-08-14 14:40:34.867677|INFO    |              |   |myTeamSpeak identifier revocation list was downloaded successfully - all related features are activated
+2018-08-14 14:40:38.316477|INFO    |              |   |Puzzle precompute time: 3476
+2018-08-14 14:40:38.323000|INFO    |FileManager   |   |listening on 0.0.0.0:30033, [::]:30033
+2018-08-14 14:40:38.323367|INFO    |VirtualSvrMgr |   |executing monthly interval
+2018-08-14 14:40:38.326195|INFO    |VirtualSvrMgr |   |reset virtualserver traffic statistics
+2018-08-14 14:40:38.420123|INFO    |VirtualServer |1  |listening on 0.0.0.0:9987, [::]:9987
+2018-08-14 14:40:38.424605|INFO    |Query         |   |listening for query on 0.0.0.0:10011, [::]:10011
+2018-08-14 14:40:38.426304|INFO    |CIDRManager   |   |updated query_ip_whitelist ips: 127.0.0.1/32, ::1/128,
 ```
 
 ## Docker troubleshooting

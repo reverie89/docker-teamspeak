@@ -3,18 +3,14 @@
 
 FROM alpine:latest
 
-ENV GLIBC_VERSION='2.26-r0'
-
-RUN \
-    apk --no-cache add ca-certificates wget w3m && \
-    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://raw.githubusercontent.com/sgerrand/alpine-pkg-glibc/master/sgerrand.rsa.pub && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk && \
-    apk add glibc-${GLIBC_VERSION}.apk && \
-    apk add --update bzip2 && \
-    rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/* /glibc-${GLIBC_VERSION}.apk && \
-    TS3_VERSION="$(w3m -dump https://www.teamspeak.com/downloads | grep -m 1 'Server 64-bit ' | awk '{print $NF}')" && \
-    wget http://dl.4players.de/ts/releases/${TS3_VERSION}/teamspeak3-server_linux_amd64-${TS3_VERSION}.tar.bz2 -O /tmp/teamspeak.tar.bz2 && \
-    apk del w3m
+RUN apk --no-cache add ca-certificates wget w3m curl; \
+    GLIBC_VERSION="$(curl -s https://api.github.com/repos/sgerrand/alpine-pkg-glibc/releases/latest | grep '\"tag_name\":' | sed -E 's/.*\"([^\"]+)\".*/\1/')"; \
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub; \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk; \
+    apk add glibc-${GLIBC_VERSION}.apk; \
+    apk add --update bzip2; \
+    rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/* /glibc-${GLIBC_VERSION}.apk; \
+    apk del curl
 
 COPY bootstrap.sh /
 
