@@ -9,4 +9,5 @@ services:
       - "10011:10011"
       - "30033:30033"
     volumes:
+      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/docker/teamspeak:/opt/teamspeak"
